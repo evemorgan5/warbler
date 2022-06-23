@@ -46,6 +46,8 @@ def add_user_to_g():
 
 @app.before_request
 def add_form_to_g():
+    """"""
+    #rename to descriptive form name
     g.form = CSRFProtectForm()
 
 
@@ -133,7 +135,7 @@ def logout():
         do_logout()
         flash(f"User is logged out", "info")
         return redirect("/login")
-
+#redirect if either if's dont pass
 
 ##############################################################################
 # General user routes:
@@ -212,7 +214,6 @@ def start_following(follow_id):
     g.user.following.append(followed_user)
     db.session.commit()
 
-
     return redirect(f"/users/{g.user.id}/following")
 
 
@@ -240,6 +241,7 @@ def profile(user_id):
 
     # IMPLEMENT THIS
     if not g.user:
+        #check user id is same as current user
         flash("Access unauthorized.", "danger")
         return redirect("/")
 
@@ -253,7 +255,7 @@ def profile(user_id):
             form.password.data)
 
         if user_auth:
-            #unable to change username from this form currently
+            # unable to change username from this form currently
             user.username = form.username.data
             user.email = form.email.data
             user.image_url = form.image_url.data
@@ -269,9 +271,6 @@ def profile(user_id):
             flash("Invalid credentials.", 'danger')
 
     return render_template('users/edit.html', form=form, user=user)
-
-
-
 
 
 @app.post('/users/delete')
@@ -315,7 +314,6 @@ def add_message():
         db.session.commit()
 
         return redirect(f"/users/{g.user.id}")
-
 
     return render_template('messages/create.html', form=form)
 
@@ -364,17 +362,17 @@ def homepage():
     """
 
     if g.user:
-        
+
         ids = [f.id for f in g.user.following]
         ids.append(g.user.id)
-        
+
         messages = (Message
                     .query
                     .filter(Message.user_id.in_(ids))
                     .order_by(Message.timestamp.desc())
                     .limit(100).all())
 
-        #breakpoint()
+        # breakpoint()
         return render_template('home.html', messages=messages)
 
     else:
