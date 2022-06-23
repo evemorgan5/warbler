@@ -46,7 +46,7 @@
 
     <div class="col-lg-6 col-md-8 col-sm-12">
       <ul class="list-group" id="messages">
-        {% for msg in messages %}
+        {% for msg in user_liked_messages %}
           <li class="list-group-item">
             <a href="/messages/{{ msg.id }}" class="message-link">
             <a href="/users/{{ msg.user.id }}">
@@ -58,16 +58,8 @@
               <p>{{ msg.text }}</p>
             </div>
             <form id="like-button" method="POST"
-                    action="/messages/{{ msg.id }}/add-like">
-                <button class="btn btn-primary btn-sm">Like</button>
-                <!-- display only when button clicked -->
-                <i class="fa fa-star" aria-hidden="true" display="none"></i>
-                <!-- <a href="{{link}}"> {{link}} </a> -->
-                <!-- add link variable which contains star,
-                  if button clicked update variable to star else leave blank-->
-                <button formaction="/messages/{{ msg.id }}/remove-like"
-                formmethod="POST"
-                class="btn btn-primary btn-sm">Remove Like</button>
+                    action="/messages/{{ msg.id }}/remove-like">
+                <button class="btn btn-primary btn-sm">Remove Like</button>
             </form>
           </li>
         {% endfor %}

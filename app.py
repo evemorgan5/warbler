@@ -354,6 +354,12 @@ def delete_message(message_id):
 ##############################################################################
 # Homepage and error pages
 
+
+
+
+##############################################################################
+# Adding and removing likes to messages
+
 @app.post("/messages/<int:message_id>/add-like")
 def add_like_to_message(message_id):
     """addes like to message on homepage"""
@@ -369,6 +375,36 @@ def add_like_to_message(message_id):
     db.session.commit()
 
     return redirect('/')
+
+@app.post("/messages/<int:message_id>/remove-like")
+def removes_like_from_message(message_id):
+    """removes like from message on homepage"""
+
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
+    #on click star appears
+
+    liked_message = Message.query.get_or_404(message_id)
+
+    g.user.liked_messages.remove(liked_message)
+    db.session.commit()
+
+    return redirect('/')
+
+
+@app.get("/users/<int:user_id>/liked-messages")
+def show_liked_messages(user_id):
+
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
+
+    user = User.query.get_or_404(user_id)
+    user_liked_messages = user.liked_messages
+
+    return render_template("users/liked-messages.html", user_liked_messages=user_liked_messages)
+
 
 
 
