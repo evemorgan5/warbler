@@ -57,17 +57,15 @@
               <span class="text-muted">{{ msg.timestamp.strftime('%d %B %Y') }}</span>
               <p>{{ msg.text }}</p>
             </div>
-            <div>
-              <form method="POST"
-                    action="/messages/{{ msg.id }}">
+            <form id="add-button" method="POST"
+                    action="/messages/{{ msg.id }}/add-like">
                 <button class="btn btn-primary btn-sm">Like</button>
                 <!-- display only when button clicked -->
                 <i class="fa fa-star" aria-hidden="true" display="none"></i>
                 <!-- <a href="{{link}}"> {{link}} </a> -->
-                <!-- add link variable which contains star, 
+                <!-- add link variable which contains star,
                   if button clicked update variable to star else leave blank-->
-              </form>
-            </div>
+            </form>
           </li>
         {% endfor %}
       </ul>

@@ -354,22 +354,22 @@ def delete_message(message_id):
 ##############################################################################
 # Homepage and error pages
 
-@app.post("/messages/<int:message_id>")
+@app.post("/messages/<int:message_id>/add-like")
 def add_like_to_message(message_id):
     """addes like to message on homepage"""
-    
+
     if not g.user:
         flash("Access unauthorized.", "danger")
         return redirect("/")
     #on click star appears
-    
+
     liked_message = Message.query.get_or_404(message_id)
-    breakpoint()
+
     g.user.liked_messages.append(liked_message)
     db.session.commit()
 
     return redirect('/')
-   
+
 
 
 @app.get('/')
