@@ -46,7 +46,7 @@ def add_user_to_g():
 
 @app.before_request
 def add_form_to_g():
-    """"""
+    """ add CSRFProtectionForm to Flask global """
     #rename to descriptive form name
     g.form = CSRFProtectForm()
 
@@ -255,7 +255,6 @@ def profile(user_id):
             form.password.data)
 
         if user_auth:
-            # unable to change username from this form currently
             user.username = form.username.data
             user.email = form.email.data
             user.image_url = form.image_url.data
@@ -372,7 +371,6 @@ def homepage():
                     .order_by(Message.timestamp.desc())
                     .limit(100).all())
 
-        # breakpoint()
         return render_template('home.html', messages=messages)
 
     else:
