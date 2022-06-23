@@ -135,7 +135,7 @@ def logout():
         do_logout()
         flash(f"User is logged out", "info")
         return redirect("/login")
-#redirect if either if's dont pass
+#redirect if either if statments don't pass? 
 
 ##############################################################################
 # General user routes:
