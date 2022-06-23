@@ -90,6 +90,14 @@ class User(db.Model):
         backref="following",
     )
 
+    # direct nav: user -> Messages through likes & back to liked by users
+    liked_messages = db.relationship(
+        'Message',
+        secondary="likes",
+        backref="liked_by_users"
+        )
+
+
     def __repr__(self):
         return f"<User #{self.id}: {self.username}, {self.email}>"
 
@@ -174,6 +182,25 @@ class Message(db.Model):
         db.ForeignKey('users.id', ondelete='CASCADE'),
         nullable=False,
     )
+
+class Likes(db.Model):
+    """Connection of a message <-> liked_by_user."""
+
+    __tablename__ = 'likes'
+
+    message_id = db.Column(
+        db.Integer,
+        db.ForeignKey('messages.id',  ondelete='CASCADE'),
+        primary_key=True
+    )
+
+    user_id = db.Column(
+        db.Integer,
+        db.ForeignKey('users.id',  ondelete='CASCADE'),
+        primary_key=True
+    )
+
+
 
 
 def connect_db(app):
