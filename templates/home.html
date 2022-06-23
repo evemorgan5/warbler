@@ -58,14 +58,18 @@
               <p>{{ msg.text }}</p>
             </div>
             <form id="like-button" method="POST">
-                {% if msg not in user.liked_messages %} 
-                <button formaction ="/messages/{{ msg.id }}/add-like" 
-                formmethod="POST" class="btn btn-sm">
-                <i class="far fa-star"></i></button>
+                {% if msg in user.messages %}
+
+                {% elif msg not in user.liked_messages %} 
+                  <button formaction ="/messages/{{ msg.id }}/add-like" 
+                  formmethod="POST" class="btn btn-sm">
+                  <i class="far fa-star"></i>
+                  </button>
                 {% else %}
-                <button formaction="/messages/{{ msg.id }}/remove-like"
-                formmethod="POST"
-                class="btn btn-sm"><i class="fa fa-star"></i></button> 
+                  <button formaction="/messages/{{ msg.id }}/remove-like"
+                  formmethod="POST"
+                  class="btn btn-sm"><i class="fa fa-star"></i>
+                  </button> 
                 {% endif %}   
             </form>
           </li>

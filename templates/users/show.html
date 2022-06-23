@@ -21,6 +21,19 @@
             </span>
         <p>{{ message.text }}</p>
       </div>
+      <form id="like-button" method="POST">
+        {% if message not in g.user.liked_messages %} 
+          <button formaction ="/messages/{{ message.id }}/add-like" 
+          formmethod="POST" class="btn btn-sm">
+          <i class="far fa-star"></i>
+          </button>
+        {% else %}
+          <button formaction="/messages/{{ message.id }}/remove-like"
+          formmethod="POST"
+          class="btn btn-sm"><i class="fa fa-star"></i>
+          </button> 
+        {% endif %}   
+    </form>
     </li>
 
     {% endfor %}
