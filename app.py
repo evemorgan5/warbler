@@ -47,8 +47,7 @@ def add_user_to_g():
 @app.before_request
 def add_form_to_g():
     """ add CSRFProtectionForm to Flask global """
-    #rename to descriptive form name
-    g.form = CSRFProtectForm()
+    g.CSRF_form = CSRFProtectForm()
 
 
 def do_login(user):
@@ -131,11 +130,15 @@ def logout():
         flash("Access unauthorized.", "danger")
         return redirect("/")
 
-    if g.form.validate_on_submit():
+    if g.CSRF_form.validate_on_submit():
         do_logout()
         flash(f"User is logged out", "info")
         return redirect("/login")
-#redirect if either if's dont pass
+
+    #redirect if either if's dont pass
+    # ask is the line below necessary
+    return redirect("/")
+
 
 ##############################################################################
 # General user routes:
@@ -240,7 +243,7 @@ def profile(user_id):
     """Update profile for current user."""
 
     # IMPLEMENT THIS
-    if not g.user:
+    if not g.user and user_id == g.user.id:
         #check user id is same as current user
         flash("Access unauthorized.", "danger")
         return redirect("/")
