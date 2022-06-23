@@ -6,9 +6,9 @@ from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError
 
 from forms import CSRFProtectForm, UserAddForm, LoginForm, MessageForm, UpdateUserForm
-from models import db, connect_db, User, Message
+from models import db, connect_db, User, Message, Follows
 
-# import pdb
+import pdb
 
 load_dotenv()
 
@@ -243,15 +243,17 @@ def profile(user_id):
         flash("Access unauthorized.", "danger")
         return redirect("/")
 
-    user = User.query.get_or_404(user_id)
+    user = g.user
     form = UpdateUserForm(obj=user)
 
     if form.validate_on_submit():
-        user = User.authenticate(
-            form.username.data,
+
+        user_auth = User.authenticate(
+            user.username,
             form.password.data)
 
-        if user:
+        if user_auth:
+            #unable to change username from this form currently
             user.username = form.username.data
             user.email = form.email.data
             user.image_url = form.image_url.data
@@ -315,7 +317,7 @@ def add_message():
         return redirect(f"/users/{g.user.id}")
 
 
-    return render_template('messages/new.html', form=form)
+    return render_template('messages/create.html', form=form)
 
 
 @app.get('/messages/<int:message_id>')
@@ -362,12 +364,17 @@ def homepage():
     """
 
     if g.user:
+        
+        ids = [f.id for f in g.user.following]
+        ids.append(g.user.id)
+        
         messages = (Message
                     .query
+                    .filter(Message.user_id.in_(ids))
                     .order_by(Message.timestamp.desc())
-                    .limit(100)
-                    .all())
+                    .limit(100).all())
 
+        #breakpoint()
         return render_template('home.html', messages=messages)
 
     else:
