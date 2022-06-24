@@ -11,6 +11,7 @@ from unittest import TestCase
 
 from models import db, User, Message, Follows
 
+
 # BEFORE we import our app, let's set an environmental variable
 # to use a different database for tests (we need to do this
 # before we import our app, since that will have already
@@ -64,15 +65,32 @@ class UserModelTestCase(TestCase):
     def test_user_is_following(self):
         u1 = User.query.get(self.u1_id)
         u2 = User.query.get(self.u2_id)
+        
+        u1.following.append(u2)
+        db.session.commit()
+        
+        self.assertEqual(User.is_following(u1,u2), 1)
 
-        # User1 should have no followers
+    def test_user_is_not_following(self):
+        u1 = User.query.get(self.u1_id)
+        u2 = User.query.get(self.u2_id)
+        
         self.assertEqual(User.is_following(u1,u2), 0)
 
     def test_user_is_followed_by(self):
         u1 = User.query.get(self.u1_id)
         u2 = User.query.get(self.u2_id)
-        # User1 is following noone
-        self.assertEqual(User.is_followed_by(u1,u2), 0)
+        
+        u1.following.append(u2)
+        db.session.commit()
+
+        self.assertEqual(User.is_followed_by(u2, u1), 1)
+
+    def test_user_is_not_followed_by(self):
+        u1 = User.query.get(self.u1_id)
+        u2 = User.query.get(self.u2_id)
+
+        self.assertEqual(User.is_followed_by(u2, u1), 0)
 
     def test_user_signup(self):
         u1 = User.query.get(self.u1_id)
@@ -84,7 +102,13 @@ class UserModelTestCase(TestCase):
         self.assertIsNot(u1.password, "")
 
     def test_user_signup(self):
-        u1 = User()
+        u3 = User.signup("u3", None, "password", None)
 
-        self.assertIsNot(type(u1.username), )
-        self.assertIsNot(type(u1.password), String)
+        self.assertIsNone(u3.email)
+       
+    def test_user_authenticate(self):
+        u1 = User.query.get(self.u1_id)
+
+        self.assertEqual(User.authenticate('u1', 'password'), u1)
+        self.assertFalse(User.authenticate('123', 'password'), u1)
+        self.assertFalse(User.authenticate('u1', '4567'), u1)
