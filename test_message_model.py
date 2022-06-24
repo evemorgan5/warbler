@@ -34,11 +34,16 @@ class MessageModelTestCase(TestCase):
 
     def setUp(self):
         Message.query.delete()
+        User.query.delete()
 
-        m1 = Message('Hello')
-        m2 = Message('Goodbye')
-
+        u1 = User.signup("u1", "u1@email.com", "password", None)
+        m1 = Message(text='Hello')
+        u1.messages.append(m1)
         db.session.commit()
+
+        self.u1_id = u1.id
+        self.m1_id = m1.id
+
 
         self.client = app.test_client()
 
@@ -46,10 +51,8 @@ class MessageModelTestCase(TestCase):
         db.session.rollback()
 
     def test_message_model(self):
-        m1 = Message.query.get(self.id)
-        m2 = Message.query.get(self.id)
+        u1 = User.query.get(self.u1_id)
 
-        self.assertEqual(m1.text, 'Hello') 
-        self.assertEqual(m2.text, 'Goodbye')
+        self.assertEqual(len(u1.messages), 1)
+        self.assertEqual(u1.messages[0].text, 'Hello')
 
-    

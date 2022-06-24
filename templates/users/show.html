@@ -23,7 +23,8 @@
       </div>
       <form id="like-button" method="POST">
         {{ g.CSRF_form.hidden_tag() }}
-        {% if message not in g.user.liked_messages %}
+        {% if g.user.id == user.id %}
+        {% elif message not in g.user.liked_messages %}
           <button formaction ="/messages/{{ message.id }}/add-like-from-{{ user.id }}"
           formmethod="POST" class="btn btn-sm">
           <i class="far fa-star"></i>

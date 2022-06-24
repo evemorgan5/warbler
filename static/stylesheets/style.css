@@ -204,6 +204,8 @@ nav + .container {
   background-position: top center;
 }
 
+
+/* TO DO -- make banner image fit width of page */
 #banner-image {
   height: 360px;
 }

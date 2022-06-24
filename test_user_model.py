@@ -33,6 +33,7 @@ db.create_all()
 class UserModelTestCase(TestCase):
 
     def setUp(self):
+        # deletes all the user instances
         User.query.delete()
 
         u1 = User.signup("u1", "u1@email.com", "password", None)
@@ -65,22 +66,22 @@ class UserModelTestCase(TestCase):
     def test_user_is_following(self):
         u1 = User.query.get(self.u1_id)
         u2 = User.query.get(self.u2_id)
-        
+
         u1.following.append(u2)
         db.session.commit()
-        
+
         self.assertEqual(User.is_following(u1,u2), 1)
 
     def test_user_is_not_following(self):
         u1 = User.query.get(self.u1_id)
         u2 = User.query.get(self.u2_id)
-        
+
         self.assertEqual(User.is_following(u1,u2), 0)
 
     def test_user_is_followed_by(self):
         u1 = User.query.get(self.u1_id)
         u2 = User.query.get(self.u2_id)
-        
+
         u1.following.append(u2)
         db.session.commit()
 
@@ -105,7 +106,7 @@ class UserModelTestCase(TestCase):
         u3 = User.signup("u3", None, "password", None)
 
         self.assertIsNone(u3.email)
-       
+
     def test_user_authenticate(self):
         u1 = User.query.get(self.u1_id)
 
