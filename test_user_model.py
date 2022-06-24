@@ -6,6 +6,7 @@
 
 
 import os
+from tokenize import String
 from unittest import TestCase
 
 from models import db, User, Message, Follows
@@ -29,6 +30,7 @@ db.create_all()
 
 
 class UserModelTestCase(TestCase):
+
     def setUp(self):
         User.query.delete()
 
@@ -50,3 +52,39 @@ class UserModelTestCase(TestCase):
         # User should have no messages & no followers
         self.assertEqual(len(u1.messages), 0)
         self.assertEqual(len(u1.followers), 0)
+
+    def test_repr(self):
+        u1 = User.query.get(self.u1_id)
+        u2 = User.query.get(self.u2_id)
+
+        self.assertEqual(u1.email, "u1@email.com")
+        self.assertEqual(u2.email, "u2@email.com")
+
+
+    def test_user_is_following(self):
+        u1 = User.query.get(self.u1_id)
+        u2 = User.query.get(self.u2_id)
+
+        # User1 should have no followers
+        self.assertEqual(User.is_following(u1,u2), 0)
+
+    def test_user_is_followed_by(self):
+        u1 = User.query.get(self.u1_id)
+        u2 = User.query.get(self.u2_id)
+        # User1 is following noone
+        self.assertEqual(User.is_followed_by(u1,u2), 0)
+
+    def test_user_signup(self):
+        u1 = User.query.get(self.u1_id)
+
+        self.assertIsNot(type(u1.username), String)
+        self.assertIsNot(type(u1.password), String)
+
+        self.assertIsNot(u1.username, "")
+        self.assertIsNot(u1.password, "")
+
+    def test_user_signup(self):
+        u1 = User()
+
+        self.assertIsNot(type(u1.username), )
+        self.assertIsNot(type(u1.password), String)
