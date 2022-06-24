@@ -59,7 +59,7 @@
             </div>
             <form id="like-button" method="POST">
                 {% if msg in user.messages %}
-
+              
                 {% elif msg not in user.liked_messages %} 
                   <button formaction ="/messages/{{ msg.id }}/add-like" 
                   formmethod="POST" class="btn btn-sm">

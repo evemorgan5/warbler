@@ -24,7 +24,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = False
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = True
 app.config['SECRET_KEY'] = os.environ['SECRET_KEY']
-toolbar = DebugToolbarExtension(app)
+#toolbar = DebugToolbarExtension(app)
 
 connect_db(app)
 
@@ -357,7 +357,7 @@ def delete_message(message_id):
 @app.post("/messages/<int:message_id>/add-like")
 def add_like_to_message(message_id):
     """adds like to message on homepage"""
-
+    
     if not g.user:
         flash("Access unauthorized.", "danger")
         return redirect("/")
@@ -371,7 +371,7 @@ def add_like_to_message(message_id):
 
 @app.post("/messages/<int:message_id>/remove-like")
 def removes_like_from_message(message_id):
-    """removes a like from message on homepage"""
+    """removes a like from message redirects to homepage"""
 
     if not g.user:
         flash("Access unauthorized.", "danger")
@@ -387,7 +387,7 @@ def removes_like_from_message(message_id):
 
 @app.get("/users/<int:user_id>/liked-messages")
 def show_liked_messages(user_id):
-    """displays the users liked messages on page"""
+    """displays the visited users liked messages on liked-messages.html page"""
     if not g.user:
         flash("Access unauthorized.", "danger")
         return redirect("/")
@@ -397,6 +397,10 @@ def show_liked_messages(user_id):
 
     return render_template("users/liked-messages.html", user_liked_messages=user_liked_messages)
 
+
+
+## go to back where user came from after they like a message
+##hidden input field to form, pass location to form *idea*
 
 ##############################################################################
 # Homepage and error pages
