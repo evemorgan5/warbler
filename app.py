@@ -357,7 +357,7 @@ def delete_message(message_id):
 @app.post("/messages/<int:message_id>/add-like")
 def add_like_to_message(message_id):
     """adds like to message on homepage"""
-    
+
     if not g.user:
         flash("Access unauthorized.", "danger")
         return redirect("/")
@@ -383,6 +383,39 @@ def removes_like_from_message(message_id):
     db.session.commit()
 
     return redirect('/')
+
+
+
+#  adding & removing likes from profile page
+@app.post("/messages/<int:message_id>/add-like-from-<int:user_id>")
+def add_like_to_message_on_user_profile(message_id, user_id):
+    """adds like to message on homepage"""
+
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
+
+    liked_message = Message.query.get_or_404(message_id)
+
+    g.user.liked_messages.append(liked_message)
+    db.session.commit()
+
+    return redirect(f'/users/{user_id}')
+
+@app.post("/messages/<int:message_id>/remove-like-from-<int:user_id>")
+def removes_like_from_message_on_user_profile(message_id, user_id):
+    """removes a like from message redirects to homepage"""
+
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
+
+    liked_message = Message.query.get_or_404(message_id)
+
+    g.user.liked_messages.remove(liked_message)
+    db.session.commit()
+
+    return redirect(f'/users/{user_id}')
 
 
 @app.get("/users/<int:user_id>/liked-messages")
