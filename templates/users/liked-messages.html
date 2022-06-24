@@ -59,6 +59,7 @@
             </div>
             <form id="like-button" method="POST"
                     action="/messages/{{ msg.id }}/remove-like">
+                    {{ g.CSRF_form.hidden_tag() }}
                 <button class="btn btn-sm"><i class="fa fa-star"></i></button>
             </form>
           </li>

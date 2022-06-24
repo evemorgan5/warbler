@@ -213,9 +213,10 @@ def start_following(follow_id):
         flash("Access unauthorized.", "danger")
         return redirect("/")
 
-    followed_user = User.query.get_or_404(follow_id)
-    g.user.following.append(followed_user)
-    db.session.commit()
+    if g.CSRF_form.validate_on_submit():
+        followed_user = User.query.get_or_404(follow_id)
+        g.user.following.append(followed_user)
+        db.session.commit()
 
     return redirect(f"/users/{g.user.id}/following")
 
@@ -231,9 +232,10 @@ def stop_following(follow_id):
         flash("Access unauthorized.", "danger")
         return redirect("/")
 
-    followed_user = User.query.get(follow_id)
-    g.user.following.remove(followed_user)
-    db.session.commit()
+    if g.CSRF_form.validate_on_submit():
+        followed_user = User.query.get(follow_id)
+        g.user.following.remove(followed_user)
+        db.session.commit()
 
     return redirect(f"/users/{g.user.id}/following")
 
@@ -286,10 +288,11 @@ def delete_user():
         flash("Access unauthorized.", "danger")
         return redirect("/")
 
-    do_logout()
+    if g.CSRF_form.validate_on_submit():
+        do_logout()
 
-    db.session.delete(g.user)
-    db.session.commit()
+        db.session.delete(g.user)
+        db.session.commit()
 
     return redirect("/signup")
 
@@ -344,9 +347,10 @@ def delete_message(message_id):
         flash("Access unauthorized.", "danger")
         return redirect("/")
 
-    msg = Message.query.get_or_404(message_id)
-    db.session.delete(msg)
-    db.session.commit()
+    if g.CSRF_form.validate_on_submit():
+        msg = Message.query.get_or_404(message_id)
+        db.session.delete(msg)
+        db.session.commit()
 
     return redirect(f"/users/{g.user.id}")
 
@@ -362,10 +366,11 @@ def add_like_to_message(message_id):
         flash("Access unauthorized.", "danger")
         return redirect("/")
 
-    liked_message = Message.query.get_or_404(message_id)
+    if g.CSRF_form.validate_on_submit():
+        liked_message = Message.query.get_or_404(message_id)
 
-    g.user.liked_messages.append(liked_message)
-    db.session.commit()
+        g.user.liked_messages.append(liked_message)
+        db.session.commit()
 
     return redirect('/')
 
@@ -377,10 +382,10 @@ def removes_like_from_message(message_id):
         flash("Access unauthorized.", "danger")
         return redirect("/")
 
-    liked_message = Message.query.get_or_404(message_id)
-
-    g.user.liked_messages.remove(liked_message)
-    db.session.commit()
+    if g.CSRF_form.validate_on_submit():
+        liked_message = Message.query.get_or_404(message_id)
+        g.user.liked_messages.remove(liked_message)
+        db.session.commit()
 
     return redirect('/')
 
@@ -395,10 +400,11 @@ def add_like_to_message_on_user_profile(message_id, user_id):
         flash("Access unauthorized.", "danger")
         return redirect("/")
 
-    liked_message = Message.query.get_or_404(message_id)
+    if g.CSRF_form.validate_on_submit():
+        liked_message = Message.query.get_or_404(message_id)
 
-    g.user.liked_messages.append(liked_message)
-    db.session.commit()
+        g.user.liked_messages.append(liked_message)
+        db.session.commit()
 
     return redirect(f'/users/{user_id}')
 
@@ -409,11 +415,11 @@ def removes_like_from_message_on_user_profile(message_id, user_id):
     if not g.user:
         flash("Access unauthorized.", "danger")
         return redirect("/")
+    if g.CSRF_form.validate_on_submit():
+        liked_message = Message.query.get_or_404(message_id)
 
-    liked_message = Message.query.get_or_404(message_id)
-
-    g.user.liked_messages.remove(liked_message)
-    db.session.commit()
+        g.user.liked_messages.remove(liked_message)
+        db.session.commit()
 
     return redirect(f'/users/{user_id}')
 

@@ -58,10 +58,11 @@
               <p>{{ msg.text }}</p>
             </div>
             <form id="like-button" method="POST">
+              {{ g.CSRF_form.hidden_tag() }}
                 {% if msg in user.messages %}
-              
-                {% elif msg not in user.liked_messages %} 
-                  <button formaction ="/messages/{{ msg.id }}/add-like" 
+
+                {% elif msg not in user.liked_messages %}
+                  <button formaction ="/messages/{{ msg.id }}/add-like"
                   formmethod="POST" class="btn btn-sm">
                   <i class="far fa-star"></i>
                   </button>
@@ -69,8 +70,8 @@
                   <button formaction="/messages/{{ msg.id }}/remove-like"
                   formmethod="POST"
                   class="btn btn-sm"><i class="fa fa-star"></i>
-                  </button> 
-                {% endif %}   
+                  </button>
+                {% endif %}
             </form>
           </li>
         {% endfor %}

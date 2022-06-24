@@ -4,7 +4,7 @@
 
 <div id="warbler-hero"
      class="full-width">
-     <img src="{{ user.header_image_url }}" alt="Banner image for profile">
+     <img id="banner-image" src="{{ user.header_image_url }}" alt="Banner image for profile">
 </div>
 <img src="{{ user.image_url }}"
      alt="Image for {{ user.username }}"
@@ -57,6 +57,7 @@
               Edit Profile
             </a>
             <form method="POST" action="/users/delete">
+              {{ g.CSRF_form.hidden_tag() }}
               <button class="btn btn-outline-danger ms-2">
                 Delete Profile
               </button>
@@ -65,10 +66,12 @@
             {% if g.user.is_following(user) %}
             <form method="POST"
                   action="/users/stop-following/{{ user.id }}">
+                  {{ g.CSRF_form.hidden_tag() }}
               <button class="btn btn-primary">Unfollow</button>
             </form>
             {% else %}
             <form method="POST" action="/users/follow/{{ user.id }}">
+              {{ g.CSRF_form.hidden_tag() }}
               <button class="btn btn-outline-primary">Follow</button>
             </form>
             {% endif %}
